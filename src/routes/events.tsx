@@ -35,8 +35,6 @@ export const Route = createFileRoute("/events")({
   component: EventsPage,
 });
 
-type HostType = "all" | "official" | "unofficial";
-
 function EventsPage() {
   const { ids, toggle, setMany, clear, exportJson, importJson } = useAttended();
   const attended = useMemo(() => new Set(ids), [ids]);
@@ -45,7 +43,6 @@ function EventsPage() {
   const [years, setYears] = useState<number[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [performers, setPerformers] = useState<string[]>([]);
-  const [hostType, setHostType] = useState<HostType>("all");
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -54,12 +51,9 @@ function EventsPage() {
       if (years.length && !years.includes(e.year)) return false;
       if (cities.length && !cities.includes(e.city)) return false;
       if (performers.length && !performers.some((p) => e.performers.includes(p))) return false;
-      const official = e.performers.some(isVsinger);
-      if (hostType === "official" && !official) return false;
-      if (hostType === "unofficial" && official) return false;
       return true;
     });
-  }, [q, years, cities, performers, hostType]);
+  }, [q, years, cities, performers]);
 
   const groups = useMemo(() => {
     const g = groupEvents(filtered);
@@ -143,22 +137,7 @@ function EventsPage() {
               onToggle={(p) => toggleList(performers, setPerformers, p)}
             />
           </Section>
-          <Section title="主办类型">
-            <div className="flex gap-1.5">
-              {(
-                [
-                  ["all", "全部"],
-                  ["official", "官方"],
-                  ["unofficial", "非官方"],
-                ] as const
-              ).map(([k, l]) => (
-                <Chip key={k} active={hostType === k} onClick={() => setHostType(k)}>
-                  {l}
-                </Chip>
-              ))}
-            </div>
-          </Section>
-          {(years.length || cities.length || performers.length || q || hostType !== "all") && (
+          {(years.length || cities.length || performers.length || q) && (
             <Button
               variant="ghost"
               size="sm"
@@ -168,7 +147,6 @@ function EventsPage() {
                 setCities([]);
                 setPerformers([]);
                 setQ("");
-                setHostType("all");
               }}
             >
               重置筛选
