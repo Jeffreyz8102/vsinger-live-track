@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
-  EVENTS,
   EVENT_BY_ID,
   SONGS,
   VSINGER_SIX,
