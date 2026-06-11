@@ -81,11 +81,10 @@ export function setlistFor(eventId: string): SetlistRow[] {
   return SETLIST.filter((s) => s.eventId === eventId).sort((a, b) => a.order - b.order);
 }
 
-// City sort: 影院观影 always last
+// City sort: 影院观影 always last (rule 6.10)
 export function sortCities(cities: string[]): string[] {
   return [...cities].sort((a, b) => {
-    if (a === "影院观影") return 1;
-    if (b === "影点观影") return -1;
+    if (a === b) return 0;
     if (a === "影院观影") return 1;
     if (b === "影院观影") return -1;
     return a.localeCompare(b, "zh-Hans-CN");
