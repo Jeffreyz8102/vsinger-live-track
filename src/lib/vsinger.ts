@@ -168,19 +168,20 @@ function chronoKey(e: VEvent): string {
 // For per-event "new unlocked" songs given an ordered list of attended events.
 // Events sharing a `simultaneousGroup` are processed as a single unit:
 // they share their union of new unlocks and appear as one card.
-export type NewUnlockGroup = {
-  key: string;
-  eventIds: string[];
+export type NewUnlockEntry = {
+  eventId: string;
   newSongs: Song[];
   sortKey: string;
+  simultaneousGroup: string | null;
 };
-export function computeNewUnlocks(attendedIds: string[]): NewUnlockGroup[] {
+export function computeNewUnlocks(attendedIds: string[]): NewUnlockEntry[] {
   const ordered = attendedIds
     .map((id) => EVENT_BY_ID.get(id))
     .filter((e): e is VEvent => !!e)
     .sort((a, b) => chronoKey(a).localeCompare(chronoKey(b)));
 
-  // Bucket consecutive events into simultaneous groups
+  // Bucket events so simultaneous ones are processed as one unit
+  // for unlock computation, but still emitted as separate entries.
   type Bucket = { key: string; events: VEvent[] };
   const buckets: Bucket[] = [];
   const bucketByGroup = new Map<string, Bucket>();
@@ -201,7 +202,7 @@ export function computeNewUnlocks(attendedIds: string[]): NewUnlockGroup[] {
   }
 
   const seen = new Set<string>();
-  const out: NewUnlockGroup[] = [];
+  const out: NewUnlockEntry[] = [];
   for (const b of buckets) {
     const songIds = new Set<string>();
     for (const e of b.events) {
@@ -215,8 +216,16 @@ export function computeNewUnlocks(attendedIds: string[]): NewUnlockGroup[] {
         if (s) fresh.push(s);
       }
     }
+    // Same sortKey across simultaneous events keeps them adjacent in display.
     const sortKey = b.events.map(chronoKey).sort().slice(-1)[0]!;
-    out.push({ key: b.key, eventIds: b.events.map((e) => e.id), newSongs: fresh, sortKey });
+    for (const e of b.events) {
+      out.push({
+        eventId: e.id,
+        newSongs: fresh,
+        sortKey,
+        simultaneousGroup: e.simultaneousGroup ?? null,
+      });
+    }
   }
   return out;
 }
