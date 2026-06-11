@@ -324,57 +324,25 @@ function Dashboard() {
       <section>
         <h2 className="text-lg font-semibold mb-3">每场新解锁曲目</h2>
         <div className="space-y-3">
-          {newUnlocksDisplay.map(({ key, eventIds, newSongs }) => {
-            const evs = eventIds
-              .map((id) => EVENT_BY_ID.get(id)!)
-              .filter(Boolean);
+          {newUnlocksDisplay.map(({ eventId, newSongs, simultaneousGroup }) => {
+            const e = EVENT_BY_ID.get(eventId)!;
+            const rows = setlistFor(eventId);
             const newIds = new Set(newSongs.map((s) => s.id));
-            // Union of setlist rows across grouped events, dedup by songId
-            const seenRow = new Set<string>();
-            const allRows: { songId: string; title: string; order: number }[] = [];
-            for (const ev of evs) {
-              for (const r of setlistFor(ev.id)) {
-                if (seenRow.has(r.songId)) continue;
-                seenRow.add(r.songId);
-                allRows.push({ songId: r.songId, title: r.title, order: r.order });
-              }
-            }
-            const repeatRows = allRows.filter((r) => !newIds.has(r.songId));
-            const isGroup = evs.length > 1;
-            const head = evs[0];
+            const repeatRows = rows.filter((r) => !newIds.has(r.songId));
             return (
-              <div key={key} className="rounded-2xl border border-border bg-card p-4">
+              <div key={eventId} className="rounded-2xl border border-border bg-card p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <div>
-                    {isGroup ? (
-                      <>
-                        <div className="font-medium">
-                          {head.date} · 同时举行的 {evs.length} 场演出
-                        </div>
-                        <ul className="mt-1 text-xs text-muted-foreground space-y-0.5">
-                          {evs.map((ev) => (
-                            <li key={ev.id}>
-                              · {ev.title}
-                              <span className="ml-1 opacity-70">
-                                ({ev.city}{ev.venue ? ` · ${ev.venue}` : ""})
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </>
-                    ) : (
-                      <>
-                        <div className="font-medium">{head.title}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {head.date} · {head.city}
-                          {head.venue ? ` · ${head.venue}` : ""}
-                        </div>
-                      </>
-                    )}
+                    <div className="font-medium">{e.title}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {e.date} · {e.city}
+                      {e.venue ? ` · ${e.venue}` : ""}
+                      {simultaneousGroup ? "（与同时举行场次共享新解锁）" : ""}
+                    </div>
                   </div>
                   <div className="text-sm text-muted-foreground">
                     新解锁 <span className="text-primary font-medium">{newSongs.length}</span> 首 /
-                    {isGroup ? "共" : "本场"} {allRows.length} 首
+                    本场 {rows.length} 首
                   </div>
                 </div>
                 {newSongs.length > 0 && (
