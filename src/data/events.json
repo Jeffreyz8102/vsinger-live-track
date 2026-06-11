@@ -202,7 +202,8 @@
     "city": "影院观影",
     "venue": null,
     "series": "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会",
-    "seriesNo": 1
+    "seriesNo": 1,
+    "simultaneousGroup": "lty_2025_birthday_0712"
   },
   {
     "id": "lty_2025_birthday_changzhou_1",
@@ -218,7 +219,8 @@
     "city": "常州",
     "venue": "中华恐龙园",
     "series": "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会",
-    "seriesNo": 2
+    "seriesNo": 2,
+    "simultaneousGroup": "lty_2025_birthday_0712"
   },
   {
     "id": "lty_2025_birthday_nanning",
@@ -234,7 +236,8 @@
     "city": "南宁",
     "venue": "凤岭水世界",
     "series": "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会",
-    "seriesNo": 4
+    "seriesNo": 4,
+    "simultaneousGroup": "lty_2025_birthday_0712"
   },
   {
     "id": "lty_2025_birthday_changzhou_2",
