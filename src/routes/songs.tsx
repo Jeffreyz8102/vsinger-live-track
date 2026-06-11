@@ -40,12 +40,19 @@ function SongsPage() {
 
   const list = useMemo(() => {
     const term = q.trim().toLowerCase();
-    return SONGS.filter((s) => {
+    const filtered = SONGS.filter((s) => {
       if (term && !s.title.toLowerCase().includes(term)) return false;
       if (performers.length && !performers.some((p) => s.performers.includes(p))) return false;
       return true;
     });
-  }, [q, performers]);
+    // Sort: listened first by count desc; unlistened by title.
+    return filtered.sort((a, b) => {
+      const ca = counts.get(a.id) ?? 0;
+      const cb = counts.get(b.id) ?? 0;
+      if (ca !== cb) return cb - ca;
+      return a.title.localeCompare(b.title, "zh-Hans-CN");
+    });
+  }, [q, performers, counts]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
