@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { toJpeg } from "html-to-image";
 import {
   EVENT_BY_ID,
   SONGS,
@@ -22,6 +23,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,6 +40,8 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const { ids } = useAttended();
+  const exportRef = useRef<HTMLDivElement>(null);
+  const [exporting, setExporting] = useState(false);
 
   const attendedEvents = useMemo(
     () =>
@@ -56,6 +61,16 @@ function Dashboard() {
   const allByVsinger = useMemo(() => songsByVsinger(), []);
   const distribution = useMemo(() => singerDistribution(ids), [ids]);
   const newUnlocks = useMemo(() => computeNewUnlocks(ids), [ids]);
+  // Display order: newest first (rule 2).
+  const newUnlocksDisplay = useMemo(
+    () =>
+      [...newUnlocks].sort((a, b) => {
+        const da = EVENT_BY_ID.get(a.eventId)?.date ?? "";
+        const db = EVENT_BY_ID.get(b.eventId)?.date ?? "";
+        return db.localeCompare(da);
+      }),
+    [newUnlocks],
+  );
 
   const topSongs = useMemo(
     () =>
@@ -68,6 +83,36 @@ function Dashboard() {
   );
 
   const totalDist = Object.values(distribution).reduce((a, b) => a + b, 0);
+
+  const citiesCovered = useMemo(
+    () =>
+      Array.from(new Set(attendedEvents.map((e) => e.city))).filter(
+        (c) => c !== "影院观影",
+      ),
+    [attendedEvents],
+  );
+
+  const handleExport = async () => {
+    if (!exportRef.current) return;
+    setExporting(true);
+    try {
+      const dataUrl = await toJpeg(exportRef.current, {
+        quality: 0.95,
+        pixelRatio: 2,
+        backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
+        cacheBust: true,
+      });
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `vsinger-memory-${new Date().toISOString().slice(0, 10)}.jpg`;
+      a.click();
+    } catch (e) {
+      console.error(e);
+      alert("导出失败，请重试");
+    } finally {
+      setExporting(false);
+    }
+  };
 
   if (ids.length === 0) {
     return (
@@ -90,12 +135,19 @@ function Dashboard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">我的观演统计</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          点击卡片可查看详细列表
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">我的观演统计</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            点击卡片可查看详细列表
+          </p>
+        </div>
+        <Button onClick={handleExport} disabled={exporting} variant="outline" size="sm">
+          <Download className="size-4 mr-1.5" />
+          {exporting ? "生成中…" : "导出长图"}
+        </Button>
       </div>
+      <div ref={exportRef} className="space-y-8 bg-background p-1">
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatDialog
@@ -140,11 +192,11 @@ function Dashboard() {
         />
         <StatDialog
           label="覆盖城市"
-          value={new Set(attendedEvents.map((e) => e.city)).size}
+          value={citiesCovered.length}
           unit="座"
           content={
             <div className="flex flex-wrap gap-2">
-              {Array.from(new Set(attendedEvents.map((e) => e.city))).map((c) => (
+              {citiesCovered.map((c) => (
                 <Badge key={c} variant="secondary">{c}</Badge>
               ))}
             </div>
