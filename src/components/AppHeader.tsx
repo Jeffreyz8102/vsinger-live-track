@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
   { to: "/", label: "我的统计" },
@@ -34,6 +35,7 @@ export function AppHeader() {
               </Link>
             );
           })}
+          <ThemeToggle className="ml-1" />
         </nav>
       </div>
     </header>
