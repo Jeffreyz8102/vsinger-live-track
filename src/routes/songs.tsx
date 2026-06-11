@@ -6,7 +6,6 @@ import {
   isVsinger,
 } from "@/lib/vsinger";
 import { useAttended } from "@/lib/store";
-import { useStore } from "@tanstack/react-store";
 import { Input } from "@/components/ui/input";
 import { PerformerFilter } from "@/components/PerformerFilter";
 import {
