@@ -329,8 +329,11 @@ function Dashboard() {
       <section>
         <h2 className="text-lg font-semibold mb-3">每场新解锁曲目</h2>
         <div className="space-y-3">
-          {newUnlocks.map(({ eventId, newSongs }) => {
+          {newUnlocksDisplay.map(({ eventId, newSongs }) => {
             const e = EVENT_BY_ID.get(eventId)!;
+            const rows = setlistFor(eventId);
+            const newIds = new Set(newSongs.map((s) => s.id));
+            const repeatRows = rows.filter((r) => !newIds.has(r.songId));
             return (
               <div key={eventId} className="rounded-2xl border border-border bg-card p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -343,7 +346,7 @@ function Dashboard() {
                   </div>
                   <div className="text-sm text-muted-foreground">
                     新解锁 <span className="text-primary font-medium">{newSongs.length}</span> 首 /
-                    本场 {setlistFor(eventId).length} 首
+                    本场 {rows.length} 首
                   </div>
                 </div>
                 {newSongs.length > 0 && (
@@ -358,11 +361,24 @@ function Dashboard() {
                     ))}
                   </div>
                 )}
+                {repeatRows.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {repeatRows.map((r) => (
+                      <span
+                        key={r.songId + r.order}
+                        className="text-xs rounded-full border border-border text-muted-foreground px-2 py-0.5"
+                      >
+                        {r.title}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
       </section>
+      </div>
     </div>
   );
 }
