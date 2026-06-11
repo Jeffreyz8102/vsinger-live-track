@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AppHeader } from "../components/AppHeader";
 
 function NotFoundComponent() {
   return (
@@ -118,7 +119,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <div className="min-h-screen flex flex-col">
+        <AppHeader />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <footer className="border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
+          由社区维护 · 数据本地存储 · 如有错漏欢迎反馈
+        </footer>
+      </div>
     </QueryClientProvider>
   );
 }
