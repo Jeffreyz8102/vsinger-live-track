@@ -21,9 +21,13 @@ function write(ids: string[]) {
 }
 
 export function useAttended() {
-  const [ids, setIds] = useState<string[]>(() => read());
+  // Start empty to match SSR; hydrate from localStorage after mount.
+  const [ids, setIds] = useState<string[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    setIds(read());
+    setHydrated(true);
     const sync = () => setIds(read());
     window.addEventListener("attended-changed", sync);
     window.addEventListener("storage", sync);
@@ -78,5 +82,5 @@ export function useAttended() {
     }
   }, []);
 
-  return { ids, toggle, setMany, clear, exportJson, importJson };
+  return { ids, hydrated, toggle, setMany, clear, exportJson, importJson };
 }
