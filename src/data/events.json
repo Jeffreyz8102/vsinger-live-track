@@ -1,0 +1,283 @@
+[
+  {
+    "id": "lty_2025_tour_beijing_1",
+    "title": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会 北京站·日场",
+    "performers": [
+      "洛天依",
+      "乐正绫"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-07-19",
+    "year": 2025,
+    "city": "北京",
+    "venue": "国家体育馆副馆",
+    "series": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会",
+    "seriesNo": 1
+  },
+  {
+    "id": "lty_2025_tour_beijing_2",
+    "title": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会 北京站·夜场",
+    "performers": [
+      "洛天依",
+      "乐正绫"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-07-19",
+    "year": 2025,
+    "city": "北京",
+    "venue": "国家体育馆副馆",
+    "series": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会",
+    "seriesNo": 2
+  },
+  {
+    "id": "lty_2025_tour_chengdu",
+    "title": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会 成都站",
+    "performers": [
+      "洛天依",
+      "言和"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-08-02",
+    "year": 2025,
+    "city": "成都",
+    "venue": "华熙LIVE·528 M空间",
+    "series": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会",
+    "seriesNo": 3
+  },
+  {
+    "id": "lty_2025_tour_guangzhou",
+    "title": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会 广州站",
+    "performers": [
+      "洛天依",
+      "乐正绫",
+      "阿萨"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-08-17",
+    "year": 2025,
+    "city": "广州",
+    "venue": "广州华南农业大学体育馆（竞赛馆）",
+    "series": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会",
+    "seriesNo": 4
+  },
+  {
+    "id": "lty_2025_tour_shanghai",
+    "title": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会 上海站",
+    "performers": [
+      "洛天依",
+      "言和",
+      "神山羊"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-08-23",
+    "year": 2025,
+    "city": "上海",
+    "venue": "纪希片场3号馆",
+    "series": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会",
+    "seriesNo": 5
+  },
+  {
+    "id": "lty_2025_tour_wuhan",
+    "title": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会 武汉站",
+    "performers": [
+      "洛天依"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-12-27",
+    "year": 2025,
+    "city": "武汉",
+    "venue": "武汉国际博览中心",
+    "series": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会",
+    "seriesNo": 6
+  },
+  {
+    "id": "lty_2025_tour_wuxi",
+    "title": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会 无锡站",
+    "performers": [
+      "洛天依",
+      "龚琳娜"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2026-02-07",
+    "year": 2026,
+    "city": "无锡",
+    "venue": "无锡体育中心体育馆",
+    "series": "洛天依2025「无限共鸣·流光协奏」全息巡回演唱会",
+    "seriesNo": 7
+  },
+  {
+    "id": "yzl_2026_live_shanghai",
+    "title": "乐正绫「绫形Diamond」线下演唱会",
+    "performers": [
+      "乐正绫",
+      "洛天依"
+    ],
+    "primaryPerformers": [
+      "乐正绫"
+    ],
+    "date": "2026-04-11",
+    "year": 2026,
+    "city": "上海",
+    "venue": "上海LIVERSE音宇宙艺术中心",
+    "series": null,
+    "seriesNo": null
+  },
+  {
+    "id": "lty_2024_live_shanghai_1",
+    "title": "洛天依「歌行宇宙」无限共鸣·全息演唱会·日场",
+    "performers": [
+      "洛天依",
+      "龚琳娜",
+      "阿萨"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2024-10-05",
+    "year": 2024,
+    "city": "上海",
+    "venue": "静安体育中心",
+    "series": "洛天依「歌行宇宙」无限共鸣·全息演唱会",
+    "seriesNo": 1
+  },
+  {
+    "id": "lty_2024_live_shanghai_2",
+    "title": "洛天依「歌行宇宙」无限共鸣·全息演唱会·夜场",
+    "performers": [
+      "洛天依",
+      "龚琳娜",
+      "阿萨"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2024-10-05",
+    "year": 2024,
+    "city": "上海",
+    "venue": "静安体育中心",
+    "series": "洛天依「歌行宇宙」无限共鸣·全息演唱会",
+    "seriesNo": 2
+  },
+  {
+    "id": "yzl_2025_birthday",
+    "title": "乐正绫十周年「向绫光」生日会·线下影院观影",
+    "performers": [
+      "乐正绫"
+    ],
+    "primaryPerformers": [
+      "乐正绫"
+    ],
+    "date": "2025-04-12",
+    "year": 2025,
+    "city": "影院观影",
+    "venue": null,
+    "series": null,
+    "seriesNo": null
+  },
+  {
+    "id": "lty_2025_birthday",
+    "title": "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会·线下影院观影",
+    "performers": [
+      "洛天依"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-07-12",
+    "year": 2025,
+    "city": "影院观影",
+    "venue": null,
+    "series": "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会",
+    "seriesNo": 1
+  },
+  {
+    "id": "lty_2025_birthday_changzhou_1",
+    "title": "中华恐龙园洛天依生日闪耀LIVE夜（7月12日场）",
+    "performers": [
+      "洛天依"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-07-12",
+    "year": 2025,
+    "city": "常州",
+    "venue": "中华恐龙园",
+    "series": "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会",
+    "seriesNo": 2
+  },
+  {
+    "id": "lty_2025_birthday_nanning",
+    "title": "凤岭水世界洛天依生日水上狂欢夜",
+    "performers": [
+      "洛天依"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-07-12",
+    "year": 2025,
+    "city": "南宁",
+    "venue": "凤岭水世界",
+    "series": "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会",
+    "seriesNo": 4
+  },
+  {
+    "id": "lty_2025_birthday_changzhou_2",
+    "title": "中华恐龙园洛天依生日闪耀LIVE夜（7月13日场）",
+    "performers": [
+      "洛天依"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2025-07-13",
+    "year": 2025,
+    "city": "常州",
+    "venue": "中华恐龙园",
+    "series": "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会",
+    "seriesNo": 3
+  },
+  {
+    "id": "vs_live_2017",
+    "title": "Vsinger Live 2017 -穿越星河的旋律-",
+    "performers": [
+      "洛天依",
+      "言和",
+      "乐正绫",
+      "乐正龙牙",
+      "墨清弦",
+      "徵羽摩柯",
+      "许嵩",
+      "内田彩"
+    ],
+    "primaryPerformers": [
+      "洛天依",
+      "言和",
+      "乐正绫",
+      "乐正龙牙",
+      "墨清弦",
+      "徵羽摩柯"
+    ],
+    "date": "2017-06-17",
+    "year": 2017,
+    "city": "上海",
+    "venue": "梅赛德斯奔驰文化中心",
+    "series": null,
+    "seriesNo": null
+  }
+]
