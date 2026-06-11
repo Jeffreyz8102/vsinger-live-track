@@ -12,6 +12,7 @@ export type VEvent = {
   venue: string | null;
   series: string | null;
   seriesNo: number | null;
+  simultaneousGroup?: string | null;
 };
 
 export type SetlistRow = {
@@ -158,25 +159,64 @@ export function groupEvents(events: VEvent[]): EventGroup[] {
   return groups;
 }
 
-// For per-event "new unlocked" songs given an ordered list of attended events
-export function computeNewUnlocks(attendedIds: string[]): { eventId: string; newSongs: Song[] }[] {
+// Chronological sort key: by date, then seriesNo (so 日场 before 夜场).
+function chronoKey(e: VEvent): string {
+  const sn = (e.seriesNo ?? 0).toString().padStart(4, "0");
+  return `${e.date}#${sn}#${e.id}`;
+}
+
+// For per-event "new unlocked" songs given an ordered list of attended events.
+// Events sharing a `simultaneousGroup` are processed as a single unit:
+// they share their union of new unlocks and appear as one card.
+export type NewUnlockGroup = {
+  key: string;
+  eventIds: string[];
+  newSongs: Song[];
+  sortKey: string;
+};
+export function computeNewUnlocks(attendedIds: string[]): NewUnlockGroup[] {
   const ordered = attendedIds
     .map((id) => EVENT_BY_ID.get(id))
     .filter((e): e is VEvent => !!e)
-    .sort((a, b) => a.date.localeCompare(b.date));
-  const seen = new Set<string>();
-  const out: { eventId: string; newSongs: Song[] }[] = [];
+    .sort((a, b) => chronoKey(a).localeCompare(chronoKey(b)));
+
+  // Bucket consecutive events into simultaneous groups
+  type Bucket = { key: string; events: VEvent[] };
+  const buckets: Bucket[] = [];
+  const bucketByGroup = new Map<string, Bucket>();
   for (const e of ordered) {
-    const rows = setlistFor(e.id);
+    const g = e.simultaneousGroup ?? null;
+    if (g) {
+      const b = bucketByGroup.get(g);
+      if (b) {
+        b.events.push(e);
+        continue;
+      }
+      const nb = { key: `grp:${g}`, events: [e] };
+      bucketByGroup.set(g, nb);
+      buckets.push(nb);
+    } else {
+      buckets.push({ key: `ev:${e.id}`, events: [e] });
+    }
+  }
+
+  const seen = new Set<string>();
+  const out: NewUnlockGroup[] = [];
+  for (const b of buckets) {
+    const songIds = new Set<string>();
+    for (const e of b.events) {
+      for (const r of setlistFor(e.id)) songIds.add(r.songId);
+    }
     const fresh: Song[] = [];
-    for (const r of rows) {
-      if (!seen.has(r.songId)) {
-        seen.add(r.songId);
-        const s = SONG_BY_ID.get(r.songId);
+    for (const sid of songIds) {
+      if (!seen.has(sid)) {
+        seen.add(sid);
+        const s = SONG_BY_ID.get(sid);
         if (s) fresh.push(s);
       }
     }
-    out.push({ eventId: e.id, newSongs: fresh });
+    const sortKey = b.events.map(chronoKey).sort().slice(-1)[0]!;
+    out.push({ key: b.key, eventIds: b.events.map((e) => e.id), newSongs: fresh, sortKey });
   }
   return out;
 }
