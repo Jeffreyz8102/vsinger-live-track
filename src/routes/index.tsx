@@ -480,7 +480,7 @@ function Dashboard() {
                     {newSongs.map((s) => (
                       <span
                         key={"n" + s.id}
-                        className="text-xs rounded-lg bg-primary/10 text-primary border border-primary/30 px-2.5 py-1 font-medium"
+                        className="text-xs rounded-lg bg-primary/10 text-primary border border-primary/30 px-2.5 py-1 font-medium whitespace-nowrap max-w-[16rem] truncate"
                       >
                         {s.title}
                       </span>
@@ -488,7 +488,7 @@ function Dashboard() {
                     {repeatRows.map((r) => (
                       <span
                         key={"r" + r.songId + r.order}
-                        className="text-xs rounded-lg bg-muted/60 text-muted-foreground px-2.5 py-1"
+                        className="text-xs rounded-lg bg-muted/60 text-muted-foreground px-2.5 py-1 whitespace-nowrap max-w-[16rem] truncate"
                       >
                         {r.title}
                       </span>
