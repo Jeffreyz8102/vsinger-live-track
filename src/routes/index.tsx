@@ -173,7 +173,7 @@ function Dashboard() {
         </div>
         <Button
           onClick={handleExport}
-          disabled={exporting}
+          disabled={exporting !== false}
           variant="outline"
           className="rounded-full border-border bg-card/60 backdrop-blur-md hover:bg-accent/40"
         >
