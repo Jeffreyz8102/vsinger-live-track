@@ -28,6 +28,15 @@ export const SETLIST: SetlistRow[] = setlistsData as SetlistRow[];
 
 export const VSINGER_SIX = ["洛天依", "言和", "乐正绫", "乐正龙牙", "徵羽摩柯", "墨清弦"] as const;
 
+export const VSINGER_COLORS: Record<string, string> = {
+  "洛天依": "#66CCFF",
+  "乐正绫": "#EE0000",
+  "言和": "#00FFCC",
+  "乐正龙牙": "#006666",
+  "墨清弦": "#FFFF00",
+  "徵羽摩柯": "#0080FF",
+};
+
 export function isVsinger(name: string) {
   return (VSINGER_SIX as readonly string[]).includes(name);
 }
