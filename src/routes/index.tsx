@@ -20,7 +20,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
@@ -112,14 +111,19 @@ function Dashboard() {
   if (ids.length === 0) {
     return (
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12">
-        <div className="rounded-3xl border border-border bg-card p-10 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">还没有观演记录</h1>
+        <div className="rounded-[2rem] border border-border/60 bg-card/60 backdrop-blur-md p-12 text-center shadow-sm">
+          <p className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-3">
+            Empty Archive
+          </p>
+          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">
+            还没有观演记录
+          </h1>
           <p className="mt-2 text-muted-foreground">
             前往「演出列表」勾选你看过的 Vsinger 线下场次，统计会实时更新。
           </p>
           <Link
             to="/events"
-            className="mt-6 inline-flex items-center rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+            className="mt-8 inline-flex items-center rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20"
           >
             去录入观演记录 →
           </Link>
@@ -129,26 +133,40 @@ function Dashboard() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 space-y-8">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">我的观演统计</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            点击卡片可查看详细列表
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-10 space-y-10">
+      {/* Header */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border/60 pb-8">
+        <div className="space-y-2">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-foreground">
+            我的观演统计
+          </h1>
+          <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground font-medium">
+            Vsinger Performance Archive ·{" "}
+            {attendedEvents.length > 0
+              ? `${attendedEvents[0]!.year} — ${attendedEvents[attendedEvents.length - 1]!.year}`
+              : ""}
           </p>
         </div>
-        <Button onClick={handleExport} disabled={exporting} variant="outline" size="sm">
+        <Button
+          onClick={handleExport}
+          disabled={exporting}
+          variant="outline"
+          className="rounded-full border-border bg-card/60 backdrop-blur-md hover:bg-accent/40"
+        >
           <Download className="size-4 mr-1.5" />
           {exporting ? "生成中…" : "导出长图"}
         </Button>
-      </div>
-      <div ref={exportRef} className="space-y-8 bg-background p-1">
+      </header>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatDialog
-          label="已看演出"
-          value={attendedEvents.length}
-          unit="场"
+      <div ref={exportRef} className="space-y-6 bg-background">
+      {/* Bento Grid */}
+      <div className="grid grid-cols-12 gap-5">
+        {/* 4 stat cards — col-span-8 */}
+        <div className="col-span-12 lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatDialog
+            label="演出场次"
+            valueText={String(attendedEvents.length).padStart(2, "0")}
+            unit="场"
           content={
             <ul className="space-y-2 max-h-[60vh] overflow-y-auto">
               {attendedEvents.map((e) => (
@@ -165,7 +183,7 @@ function Dashboard() {
         />
         <StatDialog
           label="解锁曲目"
-          value={unlockedSongs.length}
+          valueText={String(unlockedSongs.length)}
           unit={`/ ${SONGS.length}`}
           content={
             <ul className="space-y-1 max-h-[60vh] overflow-y-auto text-sm">
@@ -187,7 +205,7 @@ function Dashboard() {
         />
         <StatDialog
           label="覆盖城市"
-          value={citiesCovered.length}
+          valueText={String(citiesCovered.length).padStart(2, "0")}
           unit="座"
           content={
             <div className="flex flex-wrap gap-2">
@@ -199,7 +217,7 @@ function Dashboard() {
         />
         <StatDialog
           label="跨越年份"
-          value={new Set(attendedEvents.map((e) => e.year)).size}
+          valueText={String(new Set(attendedEvents.map((e) => e.year)).size).padStart(2, "0")}
           unit="年"
           content={
             <div className="flex flex-wrap gap-2">
@@ -211,27 +229,80 @@ function Dashboard() {
             </div>
           }
         />
-      </div>
+        </div>
 
-      <section>
-        <h2 className="text-lg font-semibold mb-3">Vsinger 曲目达成</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {VSINGER_SIX.map((v) => {
+        {/* Top 10 deep card — col-span-4, row-span-2 */}
+        <div className="col-span-12 lg:col-span-4 lg:row-span-2 rounded-[2rem] p-8 text-[var(--color-accent-deep-foreground)] shadow-xl relative overflow-hidden"
+             style={{ background: "var(--color-accent-deep)" }}>
+          <div className="absolute top-0 right-0 w-40 h-40 rounded-full -mr-20 -mt-20 blur-3xl opacity-30"
+               style={{ background: "var(--color-primary)" }} />
+          <h3 className="font-display text-lg font-bold mb-6 flex justify-between items-center">
+            曲目频次 Top 10
+            <span className="text-[10px] font-normal opacity-60 tracking-widest uppercase">
+              Listen Count
+            </span>
+          </h3>
+          {topSongs.length === 0 ? (
+            <p className="text-sm opacity-70">暂无数据</p>
+          ) : (
+            <div className="space-y-3.5 relative z-10">
+              {topSongs.map((t, i) => (
+                <div
+                  key={t.song.id}
+                  className={
+                    "flex items-center justify-between text-sm group " +
+                    (i >= 5 ? "opacity-70" : "")
+                  }
+                >
+                  <div className="flex items-center gap-4 min-w-0">
+                    <span className="opacity-40 italic font-mono tabular-nums shrink-0 w-5">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-medium truncate group-hover:translate-x-1 transition-transform">
+                      {t.song.title}
+                    </span>
+                  </div>
+                  <span className="font-mono tabular-nums opacity-80 ml-2 shrink-0">
+                    {t.count} 次
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Vsinger progress — col-span-8 */}
+        <div className="col-span-12 lg:col-span-8 rounded-[2rem] p-8 bg-card/60 backdrop-blur-md border border-border/60">
+          <h3 className="font-display font-bold text-foreground mb-8 flex items-center gap-2.5">
+            <span className="w-2 h-2 rounded-full bg-primary" />
+            Vsinger 曲目达成度
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-7">
+            {VSINGER_SIX.map((v) => {
             const total = allByVsinger[v]?.length ?? 0;
             const listened = (allByVsinger[v] ?? []).filter((s) => counts.has(s.id));
             const pct = total ? Math.round((listened.length / total) * 100) : 0;
             return (
               <Dialog key={v}>
                 <DialogTrigger asChild>
-                  <button className="text-left rounded-2xl border border-border bg-card p-4 hover:border-primary/60 transition-colors">
-                    <div className="flex items-baseline justify-between">
-                      <span className="font-medium">{v}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {listened.length} / {total}
+                  <button className="text-left space-y-2.5 group">
+                    <div className="flex justify-between items-baseline text-xs font-bold">
+                      <span className="text-foreground group-hover:text-primary transition-colors">
+                        {v}
+                      </span>
+                      <span className="font-mono tabular-nums text-muted-foreground">
+                        {pct}%
+                        <span className="ml-1.5 opacity-60">
+                          {listened.length}/{total}
+                        </span>
                       </span>
                     </div>
-                    <Progress value={pct} className="mt-3 h-2" />
-                    <div className="mt-1.5 text-xs text-muted-foreground">{pct}% 已解锁</div>
+                    <div className="h-1.5 w-full rounded-full bg-border/40 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-primary transition-all"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
                   </button>
                 </DialogTrigger>
                 <DialogContent className="max-w-lg">
@@ -265,24 +336,34 @@ function Dashboard() {
                 </DialogContent>
               </Dialog>
             );
-          })}
+            })}
+          </div>
         </div>
-      </section>
 
-      <section className="grid gap-6 lg:grid-cols-2">
-        <div>
-          <h2 className="text-lg font-semibold mb-3">已听曲目歌手分布</h2>
-          <div className="rounded-2xl border border-border bg-card p-4 space-y-2">
+        {/* Singer distribution — col-span-12 */}
+        <div className="col-span-12 rounded-[2rem] p-8 bg-card/60 backdrop-blur-md border border-border/60">
+          <h3 className="font-display font-bold text-foreground mb-6 flex items-center justify-between">
+            <span className="flex items-center gap-2.5">
+              <span className="w-2 h-2 rounded-full bg-primary" />
+              已听曲目歌手分布
+            </span>
+            <span className="text-[10px] tracking-widest uppercase text-muted-foreground font-medium">
+              Distribution
+            </span>
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
             {VSINGER_SIX.map((v) => {
               const n = distribution[v] ?? 0;
               const pct = totalDist ? (n / totalDist) * 100 : 0;
               return (
-                <div key={v}>
-                  <div className="flex justify-between text-sm">
-                    <span>{v}</span>
-                    <span className="text-muted-foreground">{n} 首 · {pct.toFixed(1)}%</span>
+                <div key={v} className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className="text-foreground">{v}</span>
+                    <span className="text-muted-foreground font-mono tabular-nums">
+                      {n} 首 · {pct.toFixed(1)}%
+                    </span>
                   </div>
-                  <div className="mt-1 h-2 rounded-full bg-secondary overflow-hidden">
+                  <div className="h-1 rounded-full bg-border/40 overflow-hidden">
                     <div
                       className="h-full bg-primary transition-all"
                       style={{ width: `${pct}%` }}
@@ -291,38 +372,24 @@ function Dashboard() {
                 </div>
               );
             })}
-            <p className="pt-2 text-xs text-muted-foreground">
-              合唱曲目按全部 Vsinger 表演者重复计算（仅统计六位 Vsinger）
-            </p>
           </div>
+          <p className="pt-5 text-[11px] text-muted-foreground/80">
+            合唱曲目按全部 Vsinger 表演者重复计算（仅统计六位 Vsinger）
+          </p>
         </div>
+      </div>
 
-        <div>
-          <h2 className="text-lg font-semibold mb-3">曲目频次 Top 10</h2>
-          <div className="rounded-2xl border border-border bg-card p-4">
-            {topSongs.length === 0 ? (
-              <p className="text-sm text-muted-foreground">暂无数据</p>
-            ) : (
-              <ol className="space-y-1.5 text-sm">
-                {topSongs.map((t, i) => (
-                  <li key={t.song.id} className="flex justify-between">
-                    <span>
-                      <span className="text-muted-foreground tabular-nums mr-2">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      {t.song.title}
-                    </span>
-                    <span className="text-muted-foreground">x{t.count}</span>
-                  </li>
-                ))}
-              </ol>
-            )}
-          </div>
+      {/* Timeline / new unlocks */}
+      <section className="pt-2">
+        <div className="flex items-end justify-between mb-5">
+          <h2 className="font-display text-xl font-bold text-foreground flex items-center gap-2.5">
+            <span className="w-2 h-2 rounded-full bg-primary" />
+            观演时光机
+          </h2>
+          <span className="text-[10px] tracking-widest uppercase text-muted-foreground font-medium">
+            New Unlocks · Reverse Chronological
+          </span>
         </div>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold mb-3">每场新解锁曲目</h2>
         <div className="space-y-3">
           {newUnlocksDisplay.map(({ eventId, newSongs, simultaneousGroup }) => {
             const e = EVENT_BY_ID.get(eventId)!;
@@ -330,39 +397,44 @@ function Dashboard() {
             const newIds = new Set(newSongs.map((s) => s.id));
             const repeatRows = rows.filter((r) => !newIds.has(r.songId));
             return (
-              <div key={eventId} className="rounded-2xl border border-border bg-card p-4">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <div>
-                    <div className="font-medium">{e.title}</div>
-                    <div className="text-xs text-muted-foreground">
+              <div
+                key={eventId}
+                className="rounded-3xl border border-border/60 bg-card/60 backdrop-blur-md p-6 hover:border-primary/40 transition-colors"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-display font-bold text-foreground text-base">
+                      {e.title}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground mt-1 font-medium tracking-wide uppercase">
                       {e.date} · {e.city}
                       {e.venue ? ` · ${e.venue}` : ""}
-                      {simultaneousGroup ? "（与同时举行场次共享新解锁）" : ""}
+                      {simultaneousGroup ? " · 同时举行共享解锁" : ""}
                     </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    新解锁 <span className="text-primary font-medium">{newSongs.length}</span> 首 /
-                    本场 {rows.length} 首
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold tracking-wider">
+                      NEW {newSongs.length}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-mono tabular-nums">
+                      / 本场 {rows.length}
+                    </span>
                   </div>
                 </div>
-                {newSongs.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1.5">
+                {(newSongs.length > 0 || repeatRows.length > 0) && (
+                  <div className="mt-4 flex flex-wrap gap-1.5">
                     {newSongs.map((s) => (
                       <span
-                        key={s.id}
-                        className="text-xs rounded-full bg-primary/10 text-primary border border-primary/30 px-2 py-0.5"
+                        key={"n" + s.id}
+                        className="text-xs rounded-lg bg-primary/10 text-primary border border-primary/30 px-2.5 py-1 font-medium"
                       >
                         {s.title}
                       </span>
                     ))}
-                  </div>
-                )}
-                {repeatRows.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
                     {repeatRows.map((r) => (
                       <span
-                        key={r.songId + r.order}
-                        className="text-xs rounded-full border border-border text-muted-foreground px-2 py-0.5"
+                        key={"r" + r.songId + r.order}
+                        className="text-xs rounded-lg bg-muted/60 text-muted-foreground px-2.5 py-1"
                       >
                         {r.title}
                       </span>
@@ -374,6 +446,12 @@ function Dashboard() {
           })}
         </div>
       </section>
+
+      <div className="pt-6 flex justify-center">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground/60 font-medium">
+          — Keep your memories crystalline —
+        </p>
+      </div>
       </div>
     </div>
   );
@@ -381,29 +459,33 @@ function Dashboard() {
 
 function StatDialog({
   label,
-  value,
+  valueText,
   unit,
   content,
 }: {
   label: string;
-  value: number;
+  valueText: string;
   unit: string;
   content: React.ReactNode;
 }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="text-left rounded-2xl border border-border bg-card p-5 hover:border-primary/60 transition-colors">
-          <div className="text-xs text-muted-foreground">{label}</div>
-          <div className="mt-2 flex items-baseline gap-1.5">
-            <span className="text-3xl font-bold tabular-nums">{value}</span>
-            <span className="text-sm text-muted-foreground">{unit}</span>
+        <button className="text-left rounded-3xl border border-border/60 bg-card/60 backdrop-blur-md p-6 hover:border-primary/40 hover:bg-card/80 transition-all">
+          <div className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground font-bold">
+            {label}
+          </div>
+          <div className="mt-3 flex items-baseline gap-1.5">
+            <span className="font-display text-4xl font-bold tabular-nums text-foreground">
+              {valueText}
+            </span>
+            <span className="text-xs text-muted-foreground font-mono">{unit}</span>
           </div>
         </button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>{label} · {value} {unit}</DialogTitle>
+          <DialogTitle>{label} · {valueText} {unit}</DialogTitle>
         </DialogHeader>
         {content}
       </DialogContent>

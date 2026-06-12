@@ -11,11 +11,13 @@ const links = [
 export function AppHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <header className="border-b border-border/60 bg-card/70 backdrop-blur sticky top-0 z-30">
+    <header className="border-b border-border/60 bg-background/70 backdrop-blur-xl sticky top-0 z-30">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
         <Link to="/" className="flex items-center gap-2 group">
-          <span className="inline-block size-2.5 rounded-full bg-primary shadow-[0_0_12px_var(--primary)]" />
-          <span className="font-semibold tracking-tight text-foreground">Vsinger 观演记忆</span>
+          <span className="inline-block size-2 rounded-full bg-primary" />
+          <span className="font-display font-semibold tracking-tight text-foreground">
+            Vsinger · 观演记忆
+          </span>
         </Link>
         <nav className="flex items-center gap-1">
           {links.map((l) => {
