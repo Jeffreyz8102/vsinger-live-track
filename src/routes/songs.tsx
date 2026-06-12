@@ -45,11 +45,12 @@ function SongsPage() {
       if (performers.length && !performers.some((p) => s.performers.includes(p))) return false;
       return true;
     });
-    // Sort: listened first by count desc; unlistened by title.
+    // Sort: listened count desc -> total event count desc -> title asc
     return filtered.sort((a, b) => {
       const ca = counts.get(a.id) ?? 0;
       const cb = counts.get(b.id) ?? 0;
       if (ca !== cb) return cb - ca;
+      if (a.eventIds.length !== b.eventIds.length) return b.eventIds.length - a.eventIds.length;
       return a.title.localeCompare(b.title, "zh-Hans-CN");
     });
   }, [q, performers, counts]);
