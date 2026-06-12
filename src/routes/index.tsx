@@ -5,6 +5,7 @@ import {
   EVENT_BY_ID,
   SONGS,
   VSINGER_SIX,
+  VSINGER_COLORS,
   isVsinger,
   setlistFor,
   songsByVsinger,
@@ -24,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -299,8 +301,8 @@ function Dashboard() {
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-border/40 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-primary transition-all"
-                        style={{ width: `${pct}%` }}
+                        className="h-full rounded-full transition-all"
+                        style={{ width: `${pct}%`, backgroundColor: VSINGER_COLORS[v] }}
                       />
                     </div>
                   </button>
@@ -351,27 +353,58 @@ function Dashboard() {
               Distribution
             </span>
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
-            {VSINGER_SIX.map((v) => {
-              const n = distribution[v] ?? 0;
-              const pct = totalDist ? (n / totalDist) * 100 : 0;
-              return (
-                <div key={v} className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-medium">
-                    <span className="text-foreground">{v}</span>
-                    <span className="text-muted-foreground font-mono tabular-nums">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-8 items-center">
+            <div className="h-72 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={VSINGER_SIX.map((v) => ({ name: v, value: distribution[v] ?? 0 }))
+                      .filter((d) => d.value > 0)}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius="55%"
+                    outerRadius="90%"
+                    paddingAngle={2}
+                    stroke="var(--color-card)"
+                    strokeWidth={2}
+                  >
+                    {VSINGER_SIX.filter((v) => (distribution[v] ?? 0) > 0).map((v) => (
+                      <Cell key={v} fill={VSINGER_COLORS[v]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--color-card)",
+                      border: "1px solid var(--color-border)",
+                      borderRadius: 12,
+                      fontSize: 12,
+                    }}
+                    formatter={(value: number, name: string) => [
+                      `${value} 首 · ${totalDist ? ((value / totalDist) * 100).toFixed(1) : 0}%`,
+                      name,
+                    ]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <ul className="space-y-2.5">
+              {VSINGER_SIX.map((v) => {
+                const n = distribution[v] ?? 0;
+                const pct = totalDist ? (n / totalDist) * 100 : 0;
+                return (
+                  <li key={v} className="flex items-center gap-3 text-sm">
+                    <span
+                      className="inline-block w-3 h-3 rounded-sm shrink-0 ring-1 ring-border/60"
+                      style={{ backgroundColor: VSINGER_COLORS[v] }}
+                    />
+                    <span className="text-foreground font-medium">{v}</span>
+                    <span className="ml-auto text-muted-foreground font-mono tabular-nums text-xs">
                       {n} 首 · {pct.toFixed(1)}%
                     </span>
-                  </div>
-                  <div className="h-1 rounded-full bg-border/40 overflow-hidden">
-                    <div
-                      className="h-full bg-primary transition-all"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
           <p className="pt-5 text-[11px] text-muted-foreground/80">
             合唱曲目按全部 Vsinger 表演者重复计算（仅统计六位 Vsinger）
