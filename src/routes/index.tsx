@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
 function Dashboard() {
   const { ids } = useAttended();
   const exportRef = useRef<HTMLDivElement>(null);
-  const [exporting, setExporting] = useState(false);
+  const [exporting, setExporting] = useState<false | "fonts" | "render">(false);
 
   const attendedEvents = useMemo(
     () =>
@@ -90,7 +90,7 @@ function Dashboard() {
 
   const handleExport = async () => {
     if (!exportRef.current) return;
-    setExporting(true);
+    setExporting("fonts");
     const node = exportRef.current;
     const prevWidth = node.style.width;
     const prevMaxWidth = node.style.maxWidth;
@@ -102,6 +102,7 @@ function Dashboard() {
       } else {
         await new Promise((r) => setTimeout(r, 300));
       }
+      setExporting("render");
       // Pin export width to desktop so the Bento grid stays in lg layout.
       node.style.width = "1280px";
       node.style.maxWidth = "1280px";
@@ -177,7 +178,11 @@ function Dashboard() {
           className="rounded-full border-border bg-card/60 backdrop-blur-md hover:bg-accent/40"
         >
           <Download className="size-4 mr-1.5" />
-          {exporting ? "生成中…" : "导出长图"}
+          {exporting === "fonts"
+            ? "准备字体…"
+            : exporting === "render"
+              ? "渲染中…"
+              : "导出长图"}
         </Button>
       </header>
 
