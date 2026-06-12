@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
 function Dashboard() {
   const { ids } = useAttended();
   const exportRef = useRef<HTMLDivElement>(null);
-  const [exporting, setExporting] = useState(false);
+  const [exporting, setExporting] = useState<false | "fonts" | "render">(false);
 
   const attendedEvents = useMemo(
     () =>
@@ -90,11 +90,30 @@ function Dashboard() {
 
   const handleExport = async () => {
     if (!exportRef.current) return;
-    setExporting(true);
+    setExporting("fonts");
+    const node = exportRef.current;
+    const prevWidth = node.style.width;
+    const prevMaxWidth = node.style.maxWidth;
     try {
+      // Wait for webfonts so html-to-image measures with the right metrics —
+      // otherwise CJK chips collapse to 1-char-wide columns.
+      if (document.fonts?.ready) {
+        await document.fonts.ready;
+      } else {
+        await new Promise((r) => setTimeout(r, 300));
+      }
+      setExporting("render");
+      // Pin export width to desktop so the Bento grid stays in lg layout.
+      node.style.width = "1280px";
+      node.style.maxWidth = "1280px";
+      node.setAttribute("data-exporting", "true");
+      // Let layout + recharts re-measure after width change.
+      await new Promise((r) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => r(null))),
+      );
       const dataUrl = await toJpeg(exportRef.current, {
         quality: 0.95,
-        pixelRatio: 2,
+        pixelRatio: Math.min(2, window.devicePixelRatio || 1.5) || 1.5,
         backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
         cacheBust: true,
       });
@@ -106,6 +125,9 @@ function Dashboard() {
       console.error(e);
       alert("导出失败，请重试");
     } finally {
+      node.style.width = prevWidth;
+      node.style.maxWidth = prevMaxWidth;
+      node.removeAttribute("data-exporting");
       setExporting(false);
     }
   };
@@ -151,12 +173,16 @@ function Dashboard() {
         </div>
         <Button
           onClick={handleExport}
-          disabled={exporting}
+          disabled={exporting !== false}
           variant="outline"
           className="rounded-full border-border bg-card/60 backdrop-blur-md hover:bg-accent/40"
         >
           <Download className="size-4 mr-1.5" />
-          {exporting ? "生成中…" : "导出长图"}
+          {exporting === "fonts"
+            ? "准备字体…"
+            : exporting === "render"
+              ? "渲染中…"
+              : "导出长图"}
         </Button>
       </header>
 
@@ -459,7 +485,7 @@ function Dashboard() {
                     {newSongs.map((s) => (
                       <span
                         key={"n" + s.id}
-                        className="text-xs rounded-lg bg-primary/10 text-primary border border-primary/30 px-2.5 py-1 font-medium"
+                        className="text-xs rounded-lg bg-primary/10 text-primary border border-primary/30 px-2.5 py-1 font-medium whitespace-nowrap max-w-[16rem] truncate"
                       >
                         {s.title}
                       </span>
@@ -467,7 +493,7 @@ function Dashboard() {
                     {repeatRows.map((r) => (
                       <span
                         key={"r" + r.songId + r.order}
-                        className="text-xs rounded-lg bg-muted/60 text-muted-foreground px-2.5 py-1"
+                        className="text-xs rounded-lg bg-muted/60 text-muted-foreground px-2.5 py-1 whitespace-nowrap max-w-[16rem] truncate"
                       >
                         {r.title}
                       </span>
