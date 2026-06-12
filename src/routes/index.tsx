@@ -91,10 +91,28 @@ function Dashboard() {
   const handleExport = async () => {
     if (!exportRef.current) return;
     setExporting(true);
+    const node = exportRef.current;
+    const prevWidth = node.style.width;
+    const prevMaxWidth = node.style.maxWidth;
     try {
+      // Wait for webfonts so html-to-image measures with the right metrics —
+      // otherwise CJK chips collapse to 1-char-wide columns.
+      if (document.fonts?.ready) {
+        await document.fonts.ready;
+      } else {
+        await new Promise((r) => setTimeout(r, 300));
+      }
+      // Pin export width to desktop so the Bento grid stays in lg layout.
+      node.style.width = "1280px";
+      node.style.maxWidth = "1280px";
+      node.setAttribute("data-exporting", "true");
+      // Let layout + recharts re-measure after width change.
+      await new Promise((r) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => r(null))),
+      );
       const dataUrl = await toJpeg(exportRef.current, {
         quality: 0.95,
-        pixelRatio: 2,
+        pixelRatio: Math.min(2, window.devicePixelRatio || 1.5) || 1.5,
         backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
         cacheBust: true,
       });
@@ -106,6 +124,9 @@ function Dashboard() {
       console.error(e);
       alert("导出失败，请重试");
     } finally {
+      node.style.width = prevWidth;
+      node.style.maxWidth = prevMaxWidth;
+      node.removeAttribute("data-exporting");
       setExporting(false);
     }
   };
