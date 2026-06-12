@@ -160,3 +160,28 @@
     letter-spacing: -0.02em;
   }
 }
+
+/* Export mode: when capturing the dashboard via html-to-image, force the
+   desktop Bento layout regardless of current viewport, disable backdrop-filter
+   (unsupported in the screenshot pipeline) and keep chip text on a single line. */
+[data-exporting="true"] {
+  width: 1280px !important;
+  max-width: 1280px !important;
+}
+[data-exporting="true"] .backdrop-blur,
+[data-exporting="true"] .backdrop-blur-md,
+[data-exporting="true"] .backdrop-blur-sm,
+[data-exporting="true"] .backdrop-blur-lg {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: var(--color-card) !important;
+}
+[data-exporting="true"] .lg\:col-span-8 { grid-column: span 8 / span 8 !important; }
+[data-exporting="true"] .lg\:col-span-4 { grid-column: span 4 / span 4 !important; }
+[data-exporting="true"] .lg\:row-span-2 { grid-row: span 2 / span 2 !important; }
+[data-exporting="true"] .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+[data-exporting="true"] .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+[data-exporting="true"] .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+[data-exporting="true"] .md\:grid-cols-\[1fr_1fr\] {
+  grid-template-columns: 1fr 1fr !important;
+}
