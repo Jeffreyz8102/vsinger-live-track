@@ -1,61 +1,43 @@
-## 目标
+## 成因分析
 
-以「空灵冰霜典藏」方向重塑 `/`（我的统计）页面。锁定：冰川冷色（#e8f0f8 / #b8d4e8 / #6ba3c8 / #2e6b8a）+ Sora 标题 / Manrope 正文 + Bento 网格。仅改造统计页与全局令牌、字体加载、AppHeader 适配，不改业务逻辑、不改演出列表/曲目索引页的功能。
+1. **当前截断是代码主动造成的**
+   - 新解锁与历史曲目的歌名标签同时使用了 `whitespace-nowrap`、`max-w-[16rem]` 和 `truncate`。
+   - `truncate` 会生成 `overflow: hidden; text-overflow: ellipsis; white-space: nowrap`，因此超过 16rem 的歌名必然显示为省略号；截图中的 `Dramat...`、`潮声回...`、`病态主角...` 正符合这一行为。
 
-## 1. 字体与全局令牌
+2. **上一轮修复把两个不同问题绑定在了一起**
+   - `whitespace-nowrap` 是为避免中文逐字竖排，应该保留。
+   - `max-w-[16rem] + truncate` 只是限制标签宽度，并不是防止竖排所必需，因此造成了新的信息损失。
 
-- `src/routes/__root.tsx`：在 `head().links` 注入 Google Fonts（Sora 400/600/700 + Manrope 300/400/500/600），用 `preconnect` + `stylesheet`，禁止在 CSS 中 `@import` 远程 URL。
-- `src/styles.css`：
-  - `@theme` 注册 `--font-display: "Sora", sans-serif;` 与 `--font-sans: "Manrope", sans-serif;`，body 默认改用 Manrope。
-  - 浅色 `:root` 重映射为冰川调（保持 oklch 表达；将 `--background` 调为 #e8f0f8、`--foreground` 为 #2e6b8a、`--primary` 为 #2e6b8a、`--muted-foreground` 为 #6ba3c8、`--border` 为 #b8d4e8、`--card` 为 white/60 等价值）。
-  - 深色 `.dark` 同步对应（保留现有深色模式，但用同色家族的更深变体，避免破坏暗色阅读）。
-  - 新增语义令牌：`--surface-glass`（半透明白）、`--accent-deep`（#2e6b8a 反色块）用于"曲目频次 Top 10"那块深色卡片。
+3. **外层布局本身已经允许自然换行**
+   - 标签容器使用 `flex flex-wrap`，完整歌名的标签可以作为一个整体换到下一行。
+   - 因此不需要截断单个歌名来维持布局；代价只是部分场次卡片高度增加，而长图导出本来就适合纵向增长。
 
-## 2. Dashboard 重排（`src/routes/index.tsx`）
+## 优化方案
 
-保留全部既有数据计算逻辑（`useAttended`、`computeNewUnlocks`、`listenedSongCounts`、`singerDistribution`、对话框、导出长图）。只重写 JSX 结构与 className：
+### 1. 调整歌名标签策略
+- 保留 `whitespace-nowrap`，继续阻止中文在标签内部逐字折行。
+- 移除常规歌名的 `max-w-[16rem]` 与 `truncate`，让标签宽度随完整歌名自然增长。
+- 继续由外层 `flex-wrap` 按“整枚标签”换到下一行，不拆散歌名。
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│ Header: H1 我的观演统计  +  英文副标 + [导出长图]按钮     │
-├──────────────────────────┬──────────────────────────────┤
-│ 4 个 stat 卡 (col-8)      │  曲目频次 Top10 深色块         │
-│ 已看 / 解锁 / 城市 / 年份  │  (col-4, row-span-2, 深底白字)│
-├──────────────────────────┤                              │
-│ Vsinger 曲目达成 (col-8)  │                              │
-│ 6 列细进度条 + Dialog     │                              │
-├──────────────────────────┴──────────────────────────────┤
-│ 已听曲目歌手分布 (col-12 半透明卡，细横条)                 │
-├─────────────────────────────────────────────────────────┤
-│ 观演时光机：每场新解锁 (col-12)                            │
-│ 时间倒序卡片纵向列表（保留同时举行场次共享解锁的提示）       │
-│ 每张卡片：日期·城市 + NEW chip + 新解锁带边框 chip /        │
-│           历史解锁灰 chip                                  │
-└─────────────────────────────────────────────────────────┘
-└── 底部小字 footer tag
-```
+### 2. 为极端超长标题设置安全兜底
+- 在导出模式中明确使用 `max-width: none`、`overflow: visible`、`text-overflow: clip`，确保长图优先完整呈现信息。
+- 仅对宽度超过整个内容区的异常超长标题允许标签内部正常断行，并保持横向文字，不恢复省略号。
+- 这样普通歌名保持单行胶囊，极端标题也不会撑出画布。
 
-样式要点：
-- 卡片统一 `rounded-3xl` / `rounded-[2rem]`，半透明白底 `bg-card/60 backdrop-blur-md border border-white`。
-- 深色强调块（Top 10）使用 `--accent-deep` 底 + 白字 + 右上角 `blur-3xl` 高光球。
-- 数字一律 Sora 700、tabular-nums，副标 `uppercase tracking-widest` 全小英文。
-- 进度条 `h-1.5 rounded-full`，背景 `bg-[--color-border]/30`，填充 `bg-primary`（保留达成度按 % 渐深，无彩色突变）。
-- 新解锁 chip：`bg-primary/10 border border-primary/40 text-primary`；历史曲目 chip：`bg-muted text-muted-foreground` 无边框。
-- 空状态卡保留，但样式同步新调性。
+### 3. 优化时间轴标签排布
+- 保持新曲在前、历史曲目在后的现有顺序与视觉层级。
+- 调整标签容器的行间距，使完整歌名换行后仍有清晰节奏，避免多行标签过密。
+- 不缩小字号，优先保证导出图片中的可读性。
 
-## 3. AppHeader 适配
+### 4. 保持现有导出修复不变
+- 继续等待字体加载完成，避免中文测量宽度异常。
+- 继续使用 1280px 固定导出宽度和桌面 Bento 布局。
+- 继续禁用导出时的 `backdrop-filter`；这些措施与本次省略问题无冲突。
 
-`src/components/AppHeader.tsx`：换上 Sora 字体头部品牌字，背景由当前深色玻璃改为浅冰玻璃（`bg-card/70 backdrop-blur`）；激活态从纯 primary 圆角改为 `bg-primary text-primary-foreground` 保持但调整为冰川深蓝。ThemeToggle 保留。
+## 验证标准
 
-## 4. 范围之外（本轮不动）
-
-- `events.tsx` / `songs.tsx` 的功能与排序逻辑不动；它们会自动继承新令牌的浅冰底色，如有局部突兀样式留待下一轮。
-- `vsinger.ts`、`store.ts`、数据文件不动。
-- 导出长图逻辑不动（仍然 `toJpeg(exportRef)`，背景色会自动取新 body 背景）。
-
-## 验证
-
-1. `bun run build` 通过。
-2. 浏览预览 `/`：勾选若干场次后，4 大数字卡、Vsinger 进度、Top10 深色卡、新解锁时光机依次按上面网格落位；浅/深主题切换无破图。
-3. 点击 4 个 stat 卡 + 6 个 Vsinger 卡：Dialog 仍按原内容打开。
-4. "导出长图"生成的 JPG 顶部到底部包含全部新版块。
+- 截图中类似 `Dramatic...`、`我的悲伤是水做的`、`潮声回响`、`病态主角观` 等歌名完整显示。
+- 中文不会恢复为逐字竖排。
+- 标签以完整单元自然换行，不超出 1280px 导出画布。
+- 曲目较多的场次允许卡片纵向增高，长图中不遮挡下一场内容。
+- 同时检查普通页面与导出结果，确保移动端不产生横向溢出。
