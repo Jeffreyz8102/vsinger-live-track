@@ -481,11 +481,11 @@ function Dashboard() {
                   </div>
                 </div>
                 {(newSongs.length > 0 || repeatRows.length > 0) && (
-                  <div className="mt-4 flex flex-wrap gap-1.5">
+                  <div className="mt-4 flex flex-wrap gap-x-1.5 gap-y-2">
                     {newSongs.map((s) => (
                       <span
                         key={"n" + s.id}
-                        className="text-xs rounded-lg bg-primary/10 text-primary border border-primary/30 px-2.5 py-1 font-medium whitespace-nowrap max-w-[16rem] truncate"
+                        className="timeline-song-chip text-xs rounded-lg bg-primary/10 text-primary border border-primary/30 px-2.5 py-1 font-medium"
                       >
                         {s.title}
                       </span>
@@ -493,7 +493,7 @@ function Dashboard() {
                     {repeatRows.map((r) => (
                       <span
                         key={"r" + r.songId + r.order}
-                        className="text-xs rounded-lg bg-muted/60 text-muted-foreground px-2.5 py-1 whitespace-nowrap max-w-[16rem] truncate"
+                        className="timeline-song-chip text-xs rounded-lg bg-muted/60 text-muted-foreground px-2.5 py-1"
                       >
                         {r.title}
                       </span>

@@ -161,6 +161,16 @@
   }
 }
 
+/* Song chips size to their full title and wrap as a whole flex item. Only a
+   title wider than the content area may wrap internally as an overflow guard. */
+.timeline-song-chip {
+  width: fit-content;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+
 /* Export mode: when capturing the dashboard via html-to-image, force the
    desktop Bento layout regardless of current viewport, disable backdrop-filter
    (unsupported in the screenshot pipeline) and keep chip text on a single line. */
@@ -184,4 +194,10 @@
 [data-exporting="true"] .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
 [data-exporting="true"] .md\:grid-cols-\[1fr_1fr\] {
   grid-template-columns: 1fr 1fr !important;
+}
+[data-exporting="true"] .timeline-song-chip {
+  width: fit-content !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
 }
