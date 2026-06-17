@@ -178,13 +178,18 @@ function Dashboard() {
             我的观演统计
           </h1>
           <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground font-medium">
-            Vsinger Performance Archive ·{" "}
-            {attendedEvents.length > 0
-              ? `${attendedEvents[0]!.year} — ${attendedEvents[attendedEvents.length - 1]!.year}`
-              : ""}
+            Vsinger Performance Archive
           </p>
         </div>
-        <Button
+        <div className="flex items-center gap-2">
+          <Input
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder="输入昵称"
+            maxLength={24}
+            className="h-9 w-36 rounded-full bg-card/60 backdrop-blur-md"
+          />
+          <Button
           onClick={handleExport}
           disabled={exporting !== false}
           variant="outline"
@@ -196,7 +201,8 @@ function Dashboard() {
             : exporting === "render"
               ? "渲染中…"
               : "导出长图"}
-        </Button>
+          </Button>
+        </div>
       </header>
 
       <div ref={exportRef} className="space-y-6 bg-background">
