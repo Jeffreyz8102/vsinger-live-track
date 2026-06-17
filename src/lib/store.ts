@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 
 const KEY = "vsinger-memory.attended.v1";
+const NICK_KEY = "vsinger-memory.nickname.v1";
 
 function read(): string[] {
   if (typeof window === "undefined") return [];
@@ -83,4 +84,26 @@ export function useAttended() {
   }, []);
 
   return { ids, hydrated, toggle, setMany, clear, exportJson, importJson };
+}
+
+export function useNickname() {
+  const [nickname, setNicknameState] = useState<string>("");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setNicknameState(window.localStorage.getItem(NICK_KEY) ?? "");
+    const sync = () => setNicknameState(window.localStorage.getItem(NICK_KEY) ?? "");
+    window.addEventListener("nickname-changed", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("nickname-changed", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+  const setNickname = useCallback((v: string) => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(NICK_KEY, v);
+    window.dispatchEvent(new CustomEvent("nickname-changed"));
+    setNicknameState(v);
+  }, []);
+  return { nickname, setNickname };
 }
