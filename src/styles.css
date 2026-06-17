@@ -161,14 +161,25 @@
   }
 }
 
-/* Song chips size to their full title and wrap as a whole flex item. Only a
-   title wider than the content area may wrap internally as an overflow guard. */
+/* Song chips: each chip takes its natural single-line width and wraps as a
+   whole flex item. `max-content` + `flex: 0 0 auto` prevents the flex
+   algorithm (and html-to-image's layout pass) from collapsing the chip to
+   min-content, which caused Chinese titles to render as 1-char vertical
+   columns. `word-break: keep-all` keeps CJK as word groups; we deliberately
+   avoid `overflow-wrap: anywhere` so the renderer never inserts per-char
+   line breaks inside a tag. Outer flex-wrap still moves whole tags onto
+   new lines when row space runs out. */
 .timeline-song-chip {
-  width: fit-content;
+  flex: 0 0 auto;
+  display: inline-block;
+  width: max-content;
   max-width: 100%;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  min-width: 0;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
   text-overflow: clip;
+  overflow: visible;
 }
 
 /* Export mode: when capturing the dashboard via html-to-image, force the
@@ -196,8 +207,13 @@
   grid-template-columns: 1fr 1fr !important;
 }
 [data-exporting="true"] .timeline-song-chip {
-  width: fit-content !important;
+  flex: 0 0 auto !important;
+  display: inline-block !important;
+  width: max-content !important;
   max-width: 100% !important;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
   overflow: visible !important;
   text-overflow: clip !important;
 }
