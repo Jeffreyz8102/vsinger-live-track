@@ -227,7 +227,7 @@ function Dashboard() {
             unit="场"
           content={
             <ul className="space-y-2 max-h-[60vh] overflow-y-auto">
-              {attendedEvents.map((e) => (
+              {attendedEventsNewestFirst.map((e) => (
                 <li key={e.id} className="rounded-lg border border-border p-3 text-sm">
                   <div className="font-medium">{e.title}</div>
                   <div className="mt-1 text-xs text-muted-foreground">
