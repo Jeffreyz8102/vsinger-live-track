@@ -14,6 +14,8 @@ import {
   computeNewUnlocks,
 } from "@/lib/vsinger";
 import { useAttended } from "@/lib/store";
+import { useNickname } from "@/lib/store";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -41,6 +43,7 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const { ids } = useAttended();
+  const { nickname, setNickname } = useNickname();
   const exportRef = useRef<HTMLDivElement>(null);
   const [exporting, setExporting] = useState<false | "fonts" | "render">(false);
 
@@ -51,6 +54,16 @@ function Dashboard() {
         .filter((e): e is NonNullable<ReturnType<typeof EVENT_BY_ID.get>> => !!e)
         .sort((a, b) => a.date.localeCompare(b.date)),
     [ids],
+  );
+
+  // Newest first; for same date, 夜场 (higher seriesNo) before 日场.
+  const attendedEventsNewestFirst = useMemo(
+    () =>
+      [...attendedEvents].sort((a, b) => {
+        if (a.date !== b.date) return b.date.localeCompare(a.date);
+        return (b.seriesNo ?? 0) - (a.seriesNo ?? 0);
+      }),
+    [attendedEvents],
   );
 
   const counts = useMemo(() => listenedSongCounts(ids), [ids]);
@@ -165,13 +178,18 @@ function Dashboard() {
             我的观演统计
           </h1>
           <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground font-medium">
-            Vsinger Performance Archive ·{" "}
-            {attendedEvents.length > 0
-              ? `${attendedEvents[0]!.year} — ${attendedEvents[attendedEvents.length - 1]!.year}`
-              : ""}
+            Vsinger Performance Archive
           </p>
         </div>
-        <Button
+        <div className="flex items-center gap-2">
+          <Input
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder="输入昵称"
+            maxLength={24}
+            className="h-9 w-36 rounded-full bg-card/60 backdrop-blur-md"
+          />
+          <Button
           onClick={handleExport}
           disabled={exporting !== false}
           variant="outline"
@@ -183,10 +201,22 @@ function Dashboard() {
             : exporting === "render"
               ? "渲染中…"
               : "导出长图"}
-        </Button>
+          </Button>
+        </div>
       </header>
 
       <div ref={exportRef} className="space-y-6 bg-background">
+      {/* Header inside export: nickname + archive title */}
+      <div className="space-y-1 pb-2">
+        {nickname && (
+          <div className="font-display text-2xl font-bold text-foreground">
+            {nickname} 的观演档案
+          </div>
+        )}
+        <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground font-medium">
+          Vsinger Performance Archive
+        </p>
+      </div>
       {/* Bento Grid */}
       <div className="grid grid-cols-12 gap-5">
         {/* 4 stat cards — col-span-8 */}
@@ -197,7 +227,7 @@ function Dashboard() {
             unit="场"
           content={
             <ul className="space-y-2 max-h-[60vh] overflow-y-auto">
-              {attendedEvents.map((e) => (
+              {attendedEventsNewestFirst.map((e) => (
                 <li key={e.id} className="rounded-lg border border-border p-3 text-sm">
                   <div className="font-medium">{e.title}</div>
                   <div className="mt-1 text-xs text-muted-foreground">

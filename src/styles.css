@@ -188,6 +188,8 @@
 [data-exporting="true"] {
   width: 1280px !important;
   max-width: 1280px !important;
+  padding: 56px !important;
+  box-sizing: border-box !important;
 }
 [data-exporting="true"] .backdrop-blur,
 [data-exporting="true"] .backdrop-blur-md,
