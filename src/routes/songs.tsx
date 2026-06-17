@@ -4,6 +4,7 @@ import {
   SONGS,
   EVENT_BY_ID,
   isVsinger,
+  SETLIST,
 } from "@/lib/vsinger";
 import { useAttended } from "@/lib/store";
 import { Input } from "@/components/ui/input";
@@ -42,7 +43,8 @@ function SongsPage() {
     const term = q.trim().toLowerCase();
     const filtered = SONGS.filter((s) => {
       if (term && !s.title.toLowerCase().includes(term)) return false;
-      if (performers.length && !performers.some((p) => s.performers.includes(p))) return false;
+      // Match songs where ALL selected performers have performed it (across any event).
+      if (performers.length && !performers.every((p) => s.performers.includes(p))) return false;
       return true;
     });
     // Sort: listened count desc -> total event count desc -> title asc
@@ -83,7 +85,12 @@ function SongsPage() {
 
         <div>
           <div className="text-sm text-muted-foreground mb-3">{list.length} 首匹配</div>
-          <ul className="grid sm:grid-cols-2 gap-2">
+          {list.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border bg-card/40 p-8 text-center text-sm text-muted-foreground">
+              没有同时由所选表演者共同参演的歌曲，试着减少筛选条件。
+            </div>
+          ) : (
+          <ul className="grid grid-cols-2 gap-2">
             {list.map((s) => {
               const got = counts.get(s.id) ?? 0;
               return (
@@ -133,6 +140,9 @@ function SongsPage() {
                         {s.eventIds.map((eid) => {
                           const e = EVENT_BY_ID.get(eid)!;
                           const attended = ids.includes(eid);
+                          const rowPerformers = SETLIST.find(
+                            (r) => r.eventId === eid && r.songId === s.id,
+                          )?.performers ?? [];
                           return (
                             <li
                               key={eid}
@@ -146,6 +156,23 @@ function SongsPage() {
                                 <div className="text-xs text-muted-foreground">
                                   {e.date} · {e.city}
                                 </div>
+                                {rowPerformers.length > 0 && (
+                                  <div className="mt-1 flex flex-wrap gap-1">
+                                    {rowPerformers.map((p) => (
+                                      <span
+                                        key={p}
+                                        className={cn(
+                                          "text-[10px] px-1.5 py-0.5 rounded-full border",
+                                          isVsinger(p)
+                                            ? "border-primary/40 text-primary bg-primary/5"
+                                            : "border-border text-muted-foreground",
+                                        )}
+                                      >
+                                        {p}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                               {attended && (
                                 <span className="text-xs text-primary shrink-0">已听</span>
@@ -160,6 +187,7 @@ function SongsPage() {
               );
             })}
           </ul>
+          )}
         </div>
       </div>
     </div>
