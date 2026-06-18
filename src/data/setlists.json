@@ -3515,5 +3515,392 @@
     "performers": [
       "洛天依"
     ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 1,
+    "songId": "song_starlight",
+    "title": "starlight",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 2,
+    "songId": "song_zhuiguangshizhe",
+    "title": "追光使者",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 3,
+    "songId": "song_iloveu",
+    "title": "I LOVE U",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 4,
+    "songId": "song_nanmunuona",
+    "title": "喃木诺娜",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 5,
+    "songId": "song_ladada",
+    "title": "啦哒哒",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 6,
+    "songId": "song_yuebaisedaoyingdeshaonv",
+    "title": "月白色倒影的少女",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 7,
+    "songId": "song_xinkong",
+    "title": "心空",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 8,
+    "songId": "song_cikememories",
+    "title": "此刻Memories",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 9,
+    "songId": "song_heidong",
+    "title": "黑洞",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 10,
+    "songId": "song_yiyangdefengbaozhongxin",
+    "title": "异样的风暴中心",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 11,
+    "songId": "song_diebian",
+    "title": "蝶变",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 12,
+    "songId": "song_tianxingwen",
+    "title": "天星问",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 13,
+    "songId": "song_xueshanzhiyan",
+    "title": "雪山之眼",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 14,
+    "songId": "song_quanyutianxia",
+    "title": "权御天下",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 15,
+    "songId": "song_luohanquan",
+    "title": "罗汉拳",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 16,
+    "songId": "song_66ccff",
+    "title": "66CCFF",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 17,
+    "songId": "song_xiyiwuqu",
+    "title": "蜥蜴舞曲",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 18,
+    "songId": "song_zaishengrecall",
+    "title": "再声Recall",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 19,
+    "songId": "song_jibuwandemingzi",
+    "title": "记不完的名字",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 20,
+    "songId": "song_xinyin",
+    "title": "心印",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 21,
+    "songId": "song_hudie",
+    "title": "蝴蝶",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_1",
+    "order": 22,
+    "songId": "song_guangyuyingdeduibai",
+    "title": "光与影的对白",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 1,
+    "songId": "song_starlight",
+    "title": "starlight",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 2,
+    "songId": "song_zhuiguangshizhe",
+    "title": "追光使者",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 3,
+    "songId": "song_aloud",
+    "title": "Aloud",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 4,
+    "songId": "song_ladada",
+    "title": "啦哒哒",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 5,
+    "songId": "song_yuebaisedaoyingdeshaonv",
+    "title": "月白色倒影的少女",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 6,
+    "songId": "song_xinkong",
+    "title": "心空",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 7,
+    "songId": "song_dengluyuzhou",
+    "title": "登陆宇宙",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 8,
+    "songId": "song_heidong",
+    "title": "黑洞",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 9,
+    "songId": "song_yiyangdefengbaozhongxin",
+    "title": "异样的风暴中心",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 10,
+    "songId": "song_diebian",
+    "title": "蝶变",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 11,
+    "songId": "song_tianxingwen",
+    "title": "天星问",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 12,
+    "songId": "song_xueshanzhiyan",
+    "title": "雪山之眼",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 13,
+    "songId": "song_quanyutianxia",
+    "title": "权御天下",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 14,
+    "songId": "song_luohanquan",
+    "title": "罗汉拳",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 15,
+    "songId": "song_66ccff",
+    "title": "66CCFF",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 16,
+    "songId": "song_xiyiwuqu",
+    "title": "蜥蜴舞曲",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 17,
+    "songId": "song_zaishengrecall",
+    "title": "再声Recall",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 18,
+    "songId": "song_jibuwandemingzi",
+    "title": "记不完的名字",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 19,
+    "songId": "song_xinyin",
+    "title": "心印",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 20,
+    "songId": "song_hudie",
+    "title": "蝴蝶",
+    "performers": [
+      "洛天依"
+    ]
+  },
+  {
+    "eventId": "lty_2026_live_shenzhen_2",
+    "order": 21,
+    "songId": "song_guangyuyingdeduibai",
+    "title": "光与影的对白",
+    "performers": [
+      "洛天依"
+    ]
   }
 ]
