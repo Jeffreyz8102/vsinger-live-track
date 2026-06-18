@@ -282,5 +282,37 @@
     "venue": "梅赛德斯奔驰文化中心",
     "series": null,
     "seriesNo": null
+  },
+  {
+    "id": "lty_2026_live_shenzhen_1",
+    "title": "中旅×洛天依「春日银河」音乐派对 Day1",
+    "performers": [
+      "洛天依"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2026-03-14",
+    "year": 2026,
+    "city": "深圳",
+    "venue": "世界之窗景区罗马假日广场",
+    "series": "中旅×洛天依「春日银河」音乐派对",
+    "seriesNo": 1
+  },
+  {
+    "id": "lty_2026_live_shenzhen_2",
+    "title": "中旅×洛天依「春日银河」音乐派对 Day2",
+    "performers": [
+      "洛天依"
+    ],
+    "primaryPerformers": [
+      "洛天依"
+    ],
+    "date": "2026-03-15",
+    "year": 2026,
+    "city": "深圳",
+    "venue": "世界之窗景区罗马假日广场",
+    "series": "中旅×洛天依「春日银河」音乐派对",
+    "seriesNo": 2
   }
 ]
