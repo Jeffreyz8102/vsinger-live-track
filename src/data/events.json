@@ -314,5 +314,83 @@
     "venue": "世界之窗景区罗马假日广场",
     "series": "中旅×洛天依「春日银河」音乐派对",
     "seriesNo": 2
+  },
+  {
+    "id": "bml_vr_2017",
+    "title": "Bilibili Macro Link-VISUAL RELEASE 2017",
+    "performers": [
+      "洛天依",
+      "言和",
+      "乐正绫",
+      "乐正龙牙",
+      "墨清弦",
+      "徵羽摩柯"
+    ],
+    "primaryPerformers": [
+      "洛天依",
+      "言和",
+      "乐正绫",
+      "乐正龙牙",
+      "墨清弦",
+      "徵羽摩柯"
+    ],
+    "date": "2017-07-21",
+    "year": 2017,
+    "city": "上海",
+    "venue": "梅赛德斯奔驰文化中心",
+    "series": null,
+    "seriesNo": null
+  },
+  {
+    "id": "bml_vr_2018",
+    "title": "Bilibili Macro Link-VISUAL RELEASE 2018",
+    "performers": [
+      "洛天依",
+      "言和",
+      "乐正绫",
+      "乐正龙牙",
+      "墨清弦",
+      "徵羽摩柯"
+    ],
+    "primaryPerformers": [
+      "洛天依",
+      "言和",
+      "乐正绫",
+      "乐正龙牙",
+      "墨清弦",
+      "徵羽摩柯"
+    ],
+    "date": "2018-07-20",
+    "year": 2018,
+    "city": "上海",
+    "venue": "梅赛德斯奔驰文化中心",
+    "series": null,
+    "seriesNo": null
+  },
+  {
+    "id": "bml_vr_2019",
+    "title": "Bilibili Macro Link-VISUAL RELEASE 2019",
+    "performers": [
+      "洛天依",
+      "言和",
+      "乐正绫",
+      "乐正龙牙",
+      "墨清弦",
+      "徵羽摩柯"
+    ],
+    "primaryPerformers": [
+      "洛天依",
+      "言和",
+      "乐正绫",
+      "乐正龙牙",
+      "墨清弦",
+      "徵羽摩柯"
+    ],
+    "date": "2019-07-19",
+    "year": 2019,
+    "city": "上海",
+    "venue": "梅赛德斯奔驰文化中心",
+    "series": null,
+    "seriesNo": null
   }
 ]
