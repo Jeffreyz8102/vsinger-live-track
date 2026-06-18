@@ -224,6 +224,10 @@ function GroupCard({
   const allChecked = group.events.every((e) => attended.has(e.id));
   const someChecked = !allChecked && group.events.some((e) => attended.has(e.id));
   const groupIsCollapsible = group.events.length > 1;
+  const groupPerformers = useMemo(
+    () => sortPerformers(Array.from(new Set(group.events.flatMap((e) => e.performers)))),
+    [group],
+  );
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="rounded-2xl border border-border bg-card overflow-hidden">
@@ -271,6 +275,23 @@ function GroupCard({
         )}
       </div>
       {groupIsCollapsible && (
+        <div className="px-4 pb-3 -mt-1 flex flex-wrap gap-1">
+          {groupPerformers.map((p) => (
+            <span
+              key={p}
+              className={cn(
+                "text-[10px] px-1.5 py-0.5 rounded-full border",
+                isVsinger(p)
+                  ? "border-primary/40 text-primary bg-primary/5"
+                  : "border-border text-muted-foreground",
+              )}
+            >
+              {p}
+            </span>
+          ))}
+        </div>
+      )}
+      {groupIsCollapsible && (
         <CollapsibleContent>
           <ul className="border-t border-border divide-y divide-border">
             {group.events.map((e) => (
@@ -282,21 +303,21 @@ function GroupCard({
                     {e.date} · {e.city}
                     {e.venue ? " · " + e.venue : ""} · {setlistFor(e.id).length} 首
                   </div>
-                </div>
-                <div className="hidden sm:flex flex-wrap gap-1 max-w-[40%] justify-end">
-                  {e.performers.slice(0, 4).map((p) => (
-                    <span
-                      key={p}
-                      className={cn(
-                        "text-[10px] px-1.5 py-0.5 rounded-full border",
-                        isVsinger(p)
-                          ? "border-primary/40 text-primary bg-primary/5"
-                          : "border-border text-muted-foreground",
-                      )}
-                    >
-                      {p}
-                    </span>
-                  ))}
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {sortPerformers(e.performers).map((p) => (
+                      <span
+                        key={p}
+                        className={cn(
+                          "text-[10px] px-1.5 py-0.5 rounded-full border",
+                          isVsinger(p)
+                            ? "border-primary/40 text-primary bg-primary/5"
+                            : "border-border text-muted-foreground",
+                        )}
+                      >
+                        {p}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </li>
             ))}
@@ -305,7 +326,7 @@ function GroupCard({
       )}
       {!groupIsCollapsible && (
         <div className="px-4 pb-3 -mt-2 flex flex-wrap gap-1">
-          {group.events[0].performers.map((p) => (
+          {sortPerformers(group.events[0].performers).map((p) => (
             <span
               key={p}
               className={cn(
@@ -325,4 +346,19 @@ function GroupCard({
       )}
     </Collapsible>
   );
+}
+
+// Sort performers: Vsinger six first (preserving canonical order), then others by zh locale.
+function sortPerformers(arr: string[]): string[] {
+  const vsingerOrder = new Map<string, number>(
+    VSINGER_SIX.map((v, i) => [v, i]),
+  );
+  return [...arr].sort((a, b) => {
+    const av = vsingerOrder.get(a);
+    const bv = vsingerOrder.get(b);
+    if (av !== undefined && bv !== undefined) return av - bv;
+    if (av !== undefined) return -1;
+    if (bv !== undefined) return 1;
+    return a.localeCompare(b, "zh-Hans-CN");
+  });
 }
