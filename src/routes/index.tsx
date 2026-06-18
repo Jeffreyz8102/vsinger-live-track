@@ -86,7 +86,13 @@ function Dashboard() {
       Array.from(counts.entries())
         .map(([id, n]) => ({ song: SONGS.find((s) => s.id === id)!, count: n }))
         .filter((x) => x.song)
-        .sort((a, b) => b.count - a.count)
+        .sort((a, b) => {
+          if (b.count !== a.count) return b.count - a.count;
+          const ea = a.song.eventIds.length;
+          const eb = b.song.eventIds.length;
+          if (eb !== ea) return eb - ea;
+          return a.song.title.localeCompare(b.song.title, "zh-Hans-CN");
+        })
         .slice(0, 10),
     [counts],
   );

@@ -137,7 +137,17 @@ function SongsPage() {
                         在以下 {s.eventIds.length} 场演出中出现 · 你已听 {got} 次
                       </div>
                       <ul className="space-y-1.5 max-h-[60vh] overflow-y-auto">
-                        {s.eventIds.map((eid) => {
+                        {[...s.eventIds]
+                          .sort((a, b) => {
+                            const ea = EVENT_BY_ID.get(a)!;
+                            const eb = EVENT_BY_ID.get(b)!;
+                            const aAtt = ids.includes(a) ? 0 : 1;
+                            const bAtt = ids.includes(b) ? 0 : 1;
+                            if (aAtt !== bAtt) return aAtt - bAtt;
+                            if (ea.date !== eb.date) return eb.date.localeCompare(ea.date);
+                            return (eb.seriesNo ?? 0) - (ea.seriesNo ?? 0);
+                          })
+                          .map((eid) => {
                           const e = EVENT_BY_ID.get(eid)!;
                           const attended = ids.includes(eid);
                           const rowPerformers = SETLIST.find(
