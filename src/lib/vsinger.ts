@@ -130,6 +130,7 @@ export type EventGroup = {
 const NON_TOUR_SERIES = new Set<string>([
   "洛天依「歌行宇宙」无限共鸣·全息演唱会",
   "洛天依十三周年「共鸣之夜·UnL∞ck」生日音乐会",
+  "中旅×洛天依「春日银河」音乐派对",
 ]);
 
 export function groupEvents(events: VEvent[]): EventGroup[] {
