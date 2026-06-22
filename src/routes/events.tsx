@@ -89,7 +89,7 @@ function EventsPage() {
           <Button variant="outline" size="sm" onClick={exportJson}>
             导出
           </Button>
-          <label className="inline-flex">
+          <label className="inline-flex cursor-pointer">
             <input
               type="file"
               accept="application/json"
@@ -100,9 +100,9 @@ function EventsPage() {
                 e.target.value = "";
               }}
             />
-            <span className="inline-flex items-center rounded-md border border-border bg-background px-3 h-9 text-sm cursor-pointer hover:bg-accent">
+            <Button variant="outline" size="sm">
               导入
-            </span>
+            </Button>
           </label>
           <Button variant="ghost" size="sm" onClick={clear}>
             清空
