@@ -1,52 +1,33 @@
-## 成因分析
+结论：当前项目不是普通 SPA，而是 TanStack Start。现在的 `vercel.json` 把所有路径重写到 `/client/index.html`，但 Vercel 构建产物里通常没有这个可直接命中的入口，所以仍会 404。
 
-1. **竖排来自标签自身被压到“最小内容宽度”**
-   - 当前 `.timeline-song-chip` 同时使用 `width: fit-content`、`max-width: 100%`、`white-space: normal` 和 `overflow-wrap: anywhere`。
-   - 在 flex 换行容器及长图截图克隆环境中，`fit-content` 可能按 min-content 参与宽度计算；中文的 min-content 接近单个汉字宽度，英文也可能被压到很短后断行。
-   - `overflow-wrap: anywhere` 又允许在任意字符间断开，因此截图里出现“蝶/变”“白石/溪”“Dramati/c”这类一字一行或尾字掉行。
+问题点：
+1. `package.json` 只执行 `vite build`，没有 Vercel 专用适配。
+2. `vite.config.ts` 使用默认服务端输出目标，不是 Vercel 原生目标。
+3. `vercel.json` 的 rewrite 目标不可靠，且可能绕开 TanStack Start 的服务端路由。
+4. 如果在 Vercel 里把 Output Directory 手动填成 `dist`、`.output/public` 或 `client`，也容易导致入口不匹配。
 
-2. **现有规则优先级互相冲突**
-   - “完整显示”需要标签按标题的自然宽度占位。
-   - `white-space: normal + anywhere` 却把每个字符都视作潜在断点；一旦导出引擎把标签算窄，就会立即竖排。
-   - 当前导出覆盖只处理了溢出与省略号，没有明确锁定标签的 flex 收缩行为、自然宽度和中文断词策略。
+解决思路：
+1. 给项目改成 Vercel 可识别的部署输出。
+2. 移除错误的 SPA fallback rewrite。
+3. 使用 TanStack Start 的 Vercel 部署方式，而不是把它当纯静态站。
 
-3. **问题主要是导出测量稳定性，而不是画布空间不足**
-   - 截图中整行仍有大量横向空间，说明这些短歌名本不需要换行。
-   - 因此不应通过缩小字号、增加画布宽度或恢复省略号解决，而应修正标签的尺寸模型。
+建议我实施的代码改动：
+1. 安装并接入 Vercel 适配器：`@tanstack/react-start-vercel`。
+2. 修改 `vite.config.ts`，把 TanStack Start/Nitro 输出目标切到 Vercel。
+3. 简化或删除当前 `vercel.json` 中的错误 rewrite，避免把所有请求强行指向不存在的 `/client/index.html`。
+4. 保留 `bun run build` 作为构建命令。
 
-## 优化方案
+Vercel 面板设置：
+1. Framework Preset：选 `Other`。
+2. Install Command：`bun install`。
+3. Build Command：`bun run build`。
+4. Output Directory：留空，不要手动填。
+5. Root Directory：项目根目录。
+6. Node.js Version：20 或 22。
+7. 重新 Deploy，最好清缓存后重建。
 
-### 1. 重建歌名标签的尺寸模型
-- 将标签设为不可收缩的独立 flex item：`flex: 0 0 auto`，避免 flex 算法把它压成 min-content 宽度。
-- 使用稳定的自然内容宽度（如 `inline-size: max-content` / 等效策略），替代容易在截图克隆中产生歧义的 `fit-content`。
-- 保留 `max-inline-size: 100%`，确保真正超过卡片宽度的异常长标题不会撑出画布。
-
-### 2. 调整断行优先级
-- 普通歌名默认保持横向完整显示，禁止任意字符断行。
-- 使用 `word-break: keep-all` 保护中文词组和中英文混排，避免短标题逐字换行。
-- 仅在标题本身宽于整块内容区时启用兜底换行；兜底应是正常多行文本，而不是一字一列，也不使用省略号。
-- 清除可能继承或残留的 `min-width`、`overflow`、`text-overflow` 冲突规则。
-
-### 3. 明确导出模式规则
-- 在 `[data-exporting="true"]` 下再次锁定：标签不可收缩、按自然宽度测量、中文保持词组、最大宽度不超过容器。
-- 保留现有 1280px 固定导出宽度、字体加载等待、双帧布局同步和关闭 `backdrop-filter` 的逻辑。
-- 不依赖仅在浏览器响应式断点下生效的规则，确保 html-to-image 克隆节点获得确定尺寸。
-
-### 4. 优化标签流式排布
-- 继续使用外层 `flex-wrap`，空间不足时让整枚标签移动到下一行，而不是先拆开标签内部文字。
-- 保留当前横向与纵向间距；若完整标签换行后密度过高，只微调行间距，不缩小文字。
-- 新曲与历史曲目的视觉层级、顺序和颜色保持不变。
-
-### 5. 极端标题的分级兜底
-- **常规标题**：单行完整胶囊，作为整体换行。
-- **接近容器宽度的标题**：占据独立一行，仍保持完整横排。
-- **超过容器宽度的异常标题**：标签宽度限制为容器宽度，内部按合理断点换成少量横向文本行；不截断、不省略、不产生单字竖列。
-
-## 验证标准
-
-- 截图中的 `Dramatic…`、`蝶变`、`潮声回响`、`白石溪`、`戏游九州`、`流光`、`病态主角观` 等均横向完整显示。
-- 普通歌名以完整标签为单位换行，不再出现单个尾字掉到下一行。
-- 长图导出与页面显示采用一致的断行逻辑，导出后无省略号、无竖排、无横向溢出。
-- 在 1280px 导出宽度以及常见桌面、平板、手机宽度下分别检查。
-- 使用一个超长中文标题和一个无空格长英文标题做边界测试，确认只在确实超过容器时触发安全换行。
-- 保持时间轴卡片自然增高，后续卡片不重叠、不遮挡。
+验证方式：
+1. 打开首页 `/`。
+2. 直接访问 `/events`、`/songs` 等页面。
+3. 在这些页面刷新浏览器。
+4. 如果都不再 404，说明服务端路由已被 Vercel 正确接管。
