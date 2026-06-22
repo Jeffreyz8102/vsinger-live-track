@@ -361,7 +361,8 @@ function Dashboard() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-7">
             {VSINGER_SIX.map((v) => {
             const total = allByVsinger[v]?.length ?? 0;
-            const listened = (allByVsinger[v] ?? []).filter((s) => counts.has(s.id));
+            const vCounts = countsByVsinger[v];
+            const listened = (allByVsinger[v] ?? []).filter((s) => vCounts.has(s.id));
             const pct = total ? Math.round((listened.length / total) * 100) : 0;
             return (
               <Dialog key={v}>
@@ -393,9 +394,9 @@ function Dashboard() {
                   <ul className="space-y-1 max-h-[60vh] overflow-y-auto text-sm">
                     {(allByVsinger[v] ?? [])
                       .slice()
-                      .sort((a, b) => Number(counts.has(b.id)) - Number(counts.has(a.id)))
+                      .sort((a, b) => Number(vCounts.has(b.id)) - Number(vCounts.has(a.id)))
                       .map((s) => {
-                        const got = counts.has(s.id);
+                        const got = vCounts.has(s.id);
                         return (
                           <li
                             key={s.id}
@@ -408,7 +409,7 @@ function Dashboard() {
                           >
                             <span>{s.title}</span>
                             <span className="text-xs">
-                              {got ? `已听 x${counts.get(s.id)}` : "未解锁"}
+                              {got ? `已听 x${vCounts.get(s.id)}` : "未解锁"}
                             </span>
                           </li>
                         );
