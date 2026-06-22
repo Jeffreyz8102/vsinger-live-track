@@ -13,6 +13,7 @@ import {
   singerDistribution,
   computeNewUnlocks,
 } from "@/lib/vsinger";
+import { SETLIST } from "@/lib/vsinger";
 import { useAttended } from "@/lib/store";
 import { useNickname } from "@/lib/store";
 import { Input } from "@/components/ui/input";
@@ -67,6 +68,22 @@ function Dashboard() {
   );
 
   const counts = useMemo(() => listenedSongCounts(ids), [ids]);
+  // Per-Vsinger listen counts: only count a song for v if the user attended
+  // an event whose setlist row for that song included v as a performer.
+  const countsByVsinger = useMemo(() => {
+    const attendedSet = new Set(ids);
+    const out: Record<string, Map<string, number>> = {};
+    for (const v of VSINGER_SIX) out[v] = new Map();
+    for (const r of SETLIST) {
+      if (!attendedSet.has(r.eventId)) continue;
+      for (const p of r.performers) {
+        if (!isVsinger(p)) continue;
+        const m = out[p];
+        m.set(r.songId, (m.get(r.songId) ?? 0) + 1);
+      }
+    }
+    return out;
+  }, [ids]);
   const unlockedSongs = useMemo(
     () => Array.from(counts.keys()).map((id) => SONGS.find((s) => s.id === id)!).filter(Boolean),
     [counts],
